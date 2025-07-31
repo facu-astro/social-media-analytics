@@ -1,0 +1,5 @@
+requests
+openai
+fastapi
+uvicorn[standard]
+python-multipart
