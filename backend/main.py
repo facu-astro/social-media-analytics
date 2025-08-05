@@ -255,124 +255,394 @@ def analyze_data(data):
         }
     }
 
-    return f"""Analysis Report:
----------------
-Q1 vs Q2 Comparison:
+    # Generate data-driven strategies based on the analysis
+    strategies = []
 
-Likes:
-- Q1: {total_likes_q1}
-- Q2: {total_likes_q2}
-- Change: {report['metrics']['likes']['change']}
+    # Strategy 1: Engagement optimization
+    if total_likes_q2 < total_likes_q1:
+        strategies.append({
+            "id": 1,
+            "title": "Boost Engagement Through Interactive Content",
+            "description": f"Your likes decreased by {abs(likes_change):.1f}%. Focus on creating more interactive content like polls, Q&As, and user-generated content campaigns to re-engage your audience.",
+            "category": "Engagement",
+            "priority": "High",
+            "implementation_time": "1-2 weeks",
+            "expected_impact": "15-25% increase in engagement rates",
+            "action_items": [
+                "Create weekly interactive polls and Q&A sessions",
+                "Launch user-generated content campaigns",
+                "Respond to comments within 2 hours during business hours"
+            ],
+            "metrics_to_track": ["Likes", "Comments", "Engagement Rate"]
+        })
+    else:
+        strategies.append({
+            "id": 1,
+            "title": "Maintain Current Engagement Strategy",
+            "description": f"Your likes increased by {likes_change:.1f}%. Continue your current engagement approach while exploring new interactive formats.",
+            "category": "Engagement",
+            "priority": "Medium",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Sustained engagement growth",
+            "action_items": [
+                "Analyze top-performing content formats",
+                "Experiment with new interactive features",
+                "Maintain consistent posting schedule"
+            ],
+            "metrics_to_track": ["Likes", "Engagement Rate", "Reach"]
+        })
 
-Comments:
-- Q1: {total_comments_q1}
-- Q2: {total_comments_q2}
-- Change: {report['metrics']['comments']['change']}
+    # Strategy 2: Content reach optimization
+    if total_impressions_q2 < total_impressions_q1:
+        strategies.append({
+            "id": 2,
+            "title": "Increase Content Reach and Visibility",
+            "description": f"Your impressions decreased by {abs(impressions_change):.1f}%. Optimize posting times and use trending hashtags to improve content visibility.",
+            "category": "Growth",
+            "priority": "High",
+            "implementation_time": "1-2 weeks",
+            "expected_impact": "20-30% increase in reach and impressions",
+            "action_items": [
+                "Analyze audience activity patterns and optimize posting times",
+                "Research and use trending hashtags in your industry",
+                "Cross-promote content across different platforms"
+            ],
+            "metrics_to_track": ["Impressions", "Reach", "Hashtag Performance"]
+        })
+    else:
+        strategies.append({
+            "id": 2,
+            "title": "Scale Content Distribution Strategy",
+            "description": f"Your impressions increased by {impressions_change:.1f}%. Build on this success by expanding your content distribution strategy.",
+            "category": "Growth",
+            "priority": "Medium",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Continued reach expansion",
+            "action_items": [
+                "Identify peak performance times and increase posting frequency",
+                "Explore new content formats and platforms",
+                "Develop partnerships for content amplification"
+            ],
+            "metrics_to_track": ["Impressions", "Reach", "Follower Growth"]
+        })
 
-Shares:
-- Q1: {total_shares_q1}
-- Q2: {total_shares_q2}
-- Change: {report['metrics']['shares']['change']}
+    # Strategy 3: Shareability improvement
+    if total_shares_q2 < total_shares_q1:
+        strategies.append({
+            "id": 3,
+            "title": "Create More Shareable Content",
+            "description": f"Your shares decreased by {abs(shares_change):.1f}%. Focus on creating valuable, shareable content that your audience wants to spread.",
+            "category": "Content",
+            "priority": "High",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "25-40% increase in content shares",
+            "action_items": [
+                "Create educational and informative content",
+                "Design visually appealing infographics and quotes",
+                "Develop content series that encourage sharing"
+            ],
+            "metrics_to_track": ["Shares", "Viral Coefficient", "Content Saves"]
+        })
+    else:
+        strategies.append({
+            "id": 3,
+            "title": "Amplify Shareable Content Strategy",
+            "description": f"Your shares increased by {shares_change:.1f}%. Continue creating shareable content while exploring new formats.",
+            "category": "Content",
+            "priority": "Medium",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Sustained sharing growth",
+            "action_items": [
+                "Analyze most shared content for patterns",
+                "Create content templates for consistent shareability",
+                "Encourage sharing through call-to-actions"
+            ],
+            "metrics_to_track": ["Shares", "Content Performance", "Audience Growth"]
+        })
 
-Impressions:
-- Q1: {total_impressions_q1:,}
-- Q2: {total_impressions_q2:,}
-- Change: {report['metrics']['impressions']['change']}
+    # Strategy 4: Community engagement
+    if total_comments_q2 < total_comments_q1:
+        strategies.append({
+            "id": 4,
+            "title": "Improve Community Response Strategy",
+            "description": f"Your comments decreased by {abs(comments_change):.1f}%. Focus on building stronger community relationships through active engagement.",
+            "category": "Community",
+            "priority": "Medium",
+            "implementation_time": "1-2 weeks",
+            "expected_impact": "Stronger community relationships and loyalty",
+            "action_items": [
+                "Implement faster response times to comments",
+                "Ask questions in posts to encourage discussion",
+                "Create community-focused content and events"
+            ],
+            "metrics_to_track": ["Comments", "Response Rate", "Community Sentiment"]
+        })
+    else:
+        strategies.append({
+            "id": 4,
+            "title": "Scale Community Engagement",
+            "description": f"Your comments increased by {comments_change:.1f}%. Build on this community engagement success.",
+            "category": "Community",
+            "priority": "Low",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Enhanced community loyalty",
+            "action_items": [
+                "Maintain current engagement levels",
+                "Explore community-building initiatives",
+                "Recognize and reward active community members"
+            ],
+            "metrics_to_track": ["Comments", "Community Growth", "User Retention"]
+        })
 
-Recommendations:
-1. {"Focus on increasing engagement through interactive content." if total_likes_q2 < total_likes_q1 else "Continue the current engagement strategy."}
-2. {"Increase posting frequency to improve impressions." if total_impressions_q2 < total_impressions_q1 else "Maintain current posting schedule."}
-3. {"Work on creating more shareable content." if total_shares_q2 < total_shares_q1 else "Continue creating shareable content."}
-4. {"Improve response rate to comments." if total_comments_q2 < total_comments_q1 else "Maintain current community engagement level."}
-"""
-    return report
+    # Strategy 5: Analytics and optimization
+    strategies.append({
+        "id": 5,
+        "title": "Implement Data-Driven Content Optimization",
+        "description": "Use performance analytics to continuously improve your social media strategy and content effectiveness.",
+        "category": "Analytics",
+        "priority": "Low",
+        "implementation_time": "3+ months",
+        "expected_impact": "Long-term strategic improvements",
+        "action_items": [
+            "Set up comprehensive analytics tracking",
+            "Create monthly performance reports",
+            "A/B test different content formats and posting times"
+        ],
+        "metrics_to_track": ["Overall Performance Score", "Content ROI", "Audience Growth Rate"]
+    })
+
+    return json.dumps({"strategies": strategies}, indent=2)
 
 def generate_strategy(report_data, retry_count=0):
     try:
-        # Model configuration with token limits
+        # Extract data
+        custom_prompt = report_data.get('custom_prompt', '')
+        okr = report_data.get('okr', '')
+        profiles_data = report_data.get('profiles', [])
+
+        # Build comprehensive prompt for structured strategy response
+        base_prompt = f"""Analyze this social media performance data and provide exactly 5 specific, actionable strategies for improvement.
+
+Data: {json.dumps(profiles_data, indent=2)}"""
+
+        if okr:
+            base_prompt += f"\n\nAlign strategies with this OKR: {okr}"
+
+        if custom_prompt:
+            base_prompt += f"\n\nAdditional context: {custom_prompt}"
+
+        base_prompt += """
+
+Please respond with a valid JSON object containing exactly 5 strategies. Use this exact format:
+
+{
+  "strategies": [
+    {
+      "id": 1,
+      "title": "Clear, actionable strategy title",
+      "description": "Detailed explanation of the strategy and why it's important",
+      "category": "Content|Engagement|Growth|Analytics|Community",
+      "priority": "High|Medium|Low",
+      "implementation_time": "1-2 weeks|2-4 weeks|1-2 months|3+ months",
+      "expected_impact": "Brief description of expected results",
+      "action_items": [
+        "Specific action item 1",
+        "Specific action item 2",
+        "Specific action item 3"
+      ],
+      "metrics_to_track": [
+        "Metric 1",
+        "Metric 2"
+      ]
+    }
+  ]
+}
+
+Focus on specific, measurable actions based on the performance data provided. Ensure each strategy has a clear title, detailed description, and actionable steps."""
+
         models = [
-            {"name": "gpt-3.5-turbo", "max_tokens": 2048},  # First attempt (safely under 4K limit)
-            {"name": "gpt-3.5-turbo", "max_tokens": 1024},  # First fallback
-            {"name": "gpt-3.5-turbo", "max_tokens": 512}    # Second fallback
+            {"name": "gpt-3.5-turbo", "max_tokens": 3000},
+            {"name": "gpt-3.5-turbo", "max_tokens": 2048},
+            {"name": "gpt-3.5-turbo", "max_tokens": 1024}
         ]
-        
-        # Add token count estimation before making the API call
-        prompt = f"""Based on this social media report: {json.dumps(report_data, indent=2)}
-        Analyze the engagement trends and suggest a strategy for next quarter. 
-        Include specific recommendations for content and posting frequency."""
-        
-        # Estimate token count (rough estimate: 4 chars ≈ 1 token)
-        estimated_tokens = len(prompt) // 4
-        print(f"\nEstimated prompt tokens: {estimated_tokens}")
-        
-        if estimated_tokens > 3000:  # Leave room for response
-            print("Warning: Input may exceed token limit. Truncating report...")
-            # Truncate the report data to fit within limits
-            report_data = str(report_data)[:8000]  # Rough truncation to stay within limits
 
-        if retry_count >= len(models):
-            print("\nAll model attempts failed. Falling back to basic analysis...")
-            return analyze_data(report_data)
-            
         model_config = models[retry_count]
-        print(f"\nAttempting with model: {model_config['name']} (max tokens: {model_config['max_tokens']})")
 
-        # Generate response using OpenAI
         response = client.chat.completions.create(
             model=model_config["name"],
             messages=[
-                {"role": "system", "content": "You are a social media strategy expert analyzing quarterly performance data."},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": "You are a social media strategy expert. Always respond with valid JSON containing exactly 5 detailed, actionable strategies. Never include markdown formatting or code blocks in your response - only pure JSON."},
+                {"role": "user", "content": base_prompt}
             ],
             temperature=0.7,
-            max_tokens=model_config["max_tokens"])
+            max_tokens=model_config["max_tokens"]
+        )
 
-        # Print usage information
-        if hasattr(response, 'usage'):
-            usage = response.usage
-            # Log detailed usage information
-            print("\nAPI Usage Statistics:")
-            print(f"Prompt Tokens: {usage.prompt_tokens}")
-            print(f"Completion Tokens: {usage.completion_tokens}")
-            print(f"Total Tokens: {usage.total_tokens}")
-            
-            # Calculate costs based on model
-            model_costs = {
-                "gpt-3.5-turbo": {"input": 0.0015, "output": 0.002},     # $0.0015/$0.002 per 1K tokens
-                "gpt-4": {"input": 0.03, "output": 0.06},                # $0.03/$0.06 per 1K tokens
-                "gpt-4-32k": {"input": 0.06, "output": 0.12},           # $0.06/$0.12 per 1K tokens
-            }
-            
-            model_pricing = model_costs.get(response.model, model_costs["gpt-3.5-turbo"])
-            input_cost = (usage.prompt_tokens / 1000) * model_pricing["input"]
-            output_cost = (usage.completion_tokens / 1000) * model_pricing["output"]
-            total_cost = input_cost + output_cost
-            
-            print(f"\nDetailed Cost Breakdown:")
-            print(f"Input Cost (${model_pricing['input']}/1K tokens): ${input_cost:.4f}")
-            print(f"Output Cost (${model_pricing['output']}/1K tokens): ${output_cost:.4f}")
-            print(f"Total Cost: ${total_cost:.4f}")
-            
-            # Log request details
-            print(f"\nRequest Details:")
-            print(f"Request ID: {response.id}")
-            print(f"Model Used: {response.model}")
-            print(f"Creation Timestamp: {response.created}")
+        strategy_response = response.choices[0].message.content.strip()
 
-            track_token_usage(response.usage.total_tokens)
-            
-            return response.choices[0].message.content
-            
+        # Try to parse as JSON first
+        try:
+            # Clean up any markdown formatting
+            if strategy_response.startswith('```'):
+                strategy_response = strategy_response.split('```')[1]
+                if strategy_response.startswith('json'):
+                    strategy_response = strategy_response[4:]
+
+            parsed_json = json.loads(strategy_response)
+            return json.dumps(parsed_json, indent=2)
+        except json.JSONDecodeError:
+            # Fallback to text parsing if JSON parsing fails
+            return parse_text_strategies_to_json(strategy_response)
+
     except Exception as e:
-        if "insufficient_quota" in str(e) and retry_count < len(models):
-            print(f"\nQuota exceeded. Retrying with reduced tokens...")
+        print(f"OpenAI API error: {str(e)}")
+        if "insufficient_quota" in str(e) and retry_count < len(models) - 1:
             return generate_strategy(report_data, retry_count + 1)
-        print(f"\nError in strategy generation: {str(e)}")
-        return analyze_data(report_data)
-    except Exception as e:
-        print(f"\nCould not generate AI strategy: {str(e)}")
-        print("Falling back to basic data analysis...")
-        return analyze_data(report_data)
+        return generate_fallback_strategies(report_data)
+
+def parse_text_strategies_to_json(text_response):
+    """Parse text-based strategy response into structured JSON format"""
+    strategies = []
+    lines = text_response.split('\n')
+    current_strategy = None
+    strategy_count = 0
+
+    categories = ["Content", "Engagement", "Growth", "Analytics", "Community"]
+    priorities = ["High", "Medium", "Low"]
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Look for strategy headers
+        if any(keyword in line.lower() for keyword in ['strategy', 'recommendation']) and len(line) > 20:
+            if current_strategy and strategy_count < 5:
+                strategies.append(current_strategy)
+
+            strategy_count += 1
+            if strategy_count > 5:
+                break
+
+            current_strategy = {
+                "id": strategy_count,
+                "title": f"Strategy {strategy_count}",
+                "description": line.replace(f"Strategy {strategy_count}:", "").strip(),
+                "category": categories[strategy_count % len(categories)],
+                "priority": priorities[0 if strategy_count <= 2 else 1 if strategy_count <= 4 else 2],
+                "implementation_time": "2-4 weeks",
+                "expected_impact": "Improved social media performance",
+                "action_items": [],
+                "metrics_to_track": ["Engagement Rate", "Reach"]
+            }
+        elif current_strategy and len(line) > 30:
+            # Add substantial lines to description
+            if len(current_strategy["description"]) < 200:
+                current_strategy["description"] += " " + line
+
+    # Add the last strategy
+    if current_strategy and len(strategies) < 5:
+        strategies.append(current_strategy)
+
+    # Ensure we have exactly 5 strategies
+    while len(strategies) < 5:
+        strategies.append({
+            "id": len(strategies) + 1,
+            "title": f"Additional Strategy {len(strategies) + 1}",
+            "description": "Focus on improving overall social media performance through data-driven decisions.",
+            "category": categories[len(strategies) % len(categories)],
+            "priority": "Medium",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Enhanced social media metrics",
+            "action_items": ["Analyze current performance", "Implement improvements", "Monitor results"],
+            "metrics_to_track": ["Engagement Rate", "Reach"]
+        })
+
+    return json.dumps({"strategies": strategies[:5]}, indent=2)
+
+def generate_fallback_strategies(report_data):
+    """Generate fallback strategies when AI fails"""
+    profiles_data = report_data.get('profiles', [])
+
+    fallback_strategies = [
+        {
+            "id": 1,
+            "title": "Optimize Content Timing",
+            "description": "Analyze your audience's most active hours and schedule posts during peak engagement times to maximize reach and interaction.",
+            "category": "Content",
+            "priority": "High",
+            "implementation_time": "1-2 weeks",
+            "expected_impact": "15-25% increase in engagement rates",
+            "action_items": [
+                "Review analytics for peak audience activity",
+                "Schedule posts during high-engagement windows",
+                "Test different posting times and measure results"
+            ],
+            "metrics_to_track": ["Engagement Rate", "Reach", "Impressions"]
+        },
+        {
+            "id": 2,
+            "title": "Enhance Visual Content Strategy",
+            "description": "Develop a consistent visual brand identity and increase the use of high-quality images, videos, and graphics to improve engagement.",
+            "category": "Content",
+            "priority": "High",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "20-30% improvement in visual content engagement",
+            "action_items": [
+                "Create brand visual guidelines",
+                "Invest in quality visual content creation",
+                "A/B test different visual formats"
+            ],
+            "metrics_to_track": ["Engagement Rate", "Shares", "Comments"]
+        },
+        {
+            "id": 3,
+            "title": "Improve Community Engagement",
+            "description": "Actively respond to comments, engage with followers' content, and create interactive posts to build a stronger community.",
+            "category": "Community",
+            "priority": "Medium",
+            "implementation_time": "1-2 weeks",
+            "expected_impact": "Stronger community relationships and loyalty",
+            "action_items": [
+                "Set up engagement response schedule",
+                "Create interactive content (polls, Q&As)",
+                "Engage with followers' content regularly"
+            ],
+            "metrics_to_track": ["Comments", "Response Rate", "Community Growth"]
+        },
+        {
+            "id": 4,
+            "title": "Leverage User-Generated Content",
+            "description": "Encourage and showcase user-generated content to increase authenticity and community involvement.",
+            "category": "Community",
+            "priority": "Medium",
+            "implementation_time": "2-4 weeks",
+            "expected_impact": "Increased authenticity and community engagement",
+            "action_items": [
+                "Create UGC campaigns and hashtags",
+                "Feature customer content regularly",
+                "Incentivize content creation with contests"
+            ],
+            "metrics_to_track": ["UGC Submissions", "Hashtag Usage", "Community Engagement"]
+        },
+        {
+            "id": 5,
+            "title": "Implement Data-Driven Content Planning",
+            "description": "Use analytics to identify top-performing content types and create more of what resonates with your audience.",
+            "category": "Analytics",
+            "priority": "Low",
+            "implementation_time": "3+ months",
+            "expected_impact": "More strategic and effective content creation",
+            "action_items": [
+                "Analyze historical content performance",
+                "Identify patterns in successful posts",
+                "Create content calendar based on insights"
+            ],
+            "metrics_to_track": ["Content Performance Score", "Engagement Trends", "Audience Growth"]
+        }
+    ]
+
+    return json.dumps({"strategies": fallback_strategies}, indent=2)
 
 def check_api_status():
     """Check OpenAI API key status"""
