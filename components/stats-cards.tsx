@@ -1,130 +1,188 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { TrendingUp, TrendingDown, Eye, Heart, MessageCircle, Share2, Users } from "lucide-react"
+"use client"
 
-interface QuarterStats {
-  quarter: string
+import { TrendingUp, TrendingDown, Eye, Heart, MessageCircle, Target, Globe, MessageSquare } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+
+interface PeriodStats {
+  period: string
+  startDate: string
+  endDate: string
   impressions: number
   likes: number
   comments: number
   shares: number
   engagement_rate: number
+  profileId: string
+  profileName: string
 }
 
 interface StatsCardsProps {
-  currentStats: QuarterStats
-  previousStats: QuarterStats
+  currentStats: PeriodStats[]
+  previousStats: PeriodStats[]
+}
+
+const getPlatformIcon = (profileName: string) => {
+  const name = profileName.toLowerCase()
+  if (name.includes('facebook') || name.includes('fb')) return Globe
+  if (name.includes('twitter') || name.includes('x.com')) return MessageCircle
+  if (name.includes('instagram') || name.includes('ig')) return Eye
+  if (name.includes('linkedin') || name.includes('li')) return Target
+  if (name.includes('youtube') || name.includes('yt')) return Heart
+  return MessageSquare
 }
 
 export function StatsCards({ currentStats, previousStats }: StatsCardsProps) {
+  // Aggregate stats across all profiles
+  const aggregateStats = (stats: PeriodStats[]) => {
+    return stats.reduce((acc, stat) => ({
+      impressions: acc.impressions + stat.impressions,
+      likes: acc.likes + stat.likes,
+      comments: acc.comments + stat.comments,
+      shares: acc.shares + stat.shares,
+      engagement_rate: acc.engagement_rate + stat.engagement_rate
+    }), { impressions: 0, likes: 0, comments: 0, shares: 0, engagement_rate: 0 })
+  }
+
+  const currentAgg = aggregateStats(currentStats)
+  const previousAgg = aggregateStats(previousStats)
+  
+  // Average engagement rate (handle division by zero)
+  currentAgg.engagement_rate = currentStats.length > 0 ? currentAgg.engagement_rate / currentStats.length : 0
+  previousAgg.engagement_rate = previousStats.length > 0 ? previousAgg.engagement_rate / previousStats.length : 0
+
   const calculateChange = (current: number, previous: number) => {
-    const change = ((current - previous) / previous) * 100
-    return {
-      percentage: Math.abs(change).toFixed(1),
-      isPositive: change > 0,
-      isNeutral: Math.abs(change) < 1,
-    }
+    if (isNaN(current) || isNaN(previous) || previous === 0) return 0
+    return ((current - previous) / previous) * 100
   }
 
   const formatNumber = (num: number) => {
+    if (isNaN(num) || num === null || num === undefined) {
+      return "0"
+    }
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + "M"
     }
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + "K"
     }
-    return num.toLocaleString()
+    return num.toString()
   }
 
-  const stats = [
-    {
-      title: "Total Impressions",
-      value: currentStats.impressions,
-      previousValue: previousStats.impressions,
-      icon: Eye,
-      color: "text-blue-600",
-    },
-    {
-      title: "Likes",
-      value: currentStats.likes,
-      previousValue: previousStats.likes,
-      icon: Heart,
-      color: "text-red-500",
-    },
-    {
-      title: "Comments",
-      value: currentStats.comments,
-      previousValue: previousStats.comments,
-      icon: MessageCircle,
-      color: "text-green-600",
-    },
-    {
-      title: "Shares",
-      value: currentStats.shares,
-      previousValue: previousStats.shares,
-      icon: Share2,
-      color: "text-purple-600",
-    },
-    {
-      title: "Engagement Rate",
-      value: currentStats.engagement_rate,
-      previousValue: previousStats.engagement_rate,
-      icon: Users,
-      color: "text-orange-600",
-      isPercentage: true,
-    },
-  ]
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    })
+  }
+
+  const totalInteractions = currentAgg.impressions + currentAgg.likes + currentAgg.comments + currentAgg.shares
+  const avgEngagement = currentAgg.engagement_rate
+  const daysTracked = Math.round(
+    (new Date(currentStats[0].endDate).getTime() - new Date(currentStats[0].startDate).getTime()) / (1000 * 60 * 60 * 24)
+  )
+
+  const StatItem = ({
+    icon: Icon,
+    label,
+    value,
+    change,
+    color,
+  }: {
+    icon: any
+    label: string
+    value: number | string
+    change: number
+    color: string
+  }) => (
+    <div className="surface-primary p-6 rounded-xl border-2 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className={`p-3 rounded-xl shadow-sm ${color}`}>
+            <Icon className="w-5 h-5" />
+          </div>
+          <div className="space-tight">
+            <p className="text-caption text-foreground-secondary">{label}</p>
+            <p className="text-heading-3 text-foreground font-bold">
+              {typeof value === "number" ? formatNumber(value) : value}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-right">
+          {change > 0 ? (
+            <TrendingUp className="w-5 h-5 text-success" />
+          ) : change < 0 ? (
+            <TrendingDown className="w-5 h-5 text-destructive" />
+          ) : null}
+          <span
+            className={`text-body-small font-semibold ${
+              change > 0 ? "text-success" : change < 0 ? "text-destructive" : "text-foreground-tertiary"
+            }`}
+          >
+            {change > 0 ? "+" : ""}
+            {change.toFixed(1)}%
+          </span>
+        </div>
+      </div>
+    </div>
+  )
 
   return (
-    <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Current Quarter Performance</h2>
-        <p className="text-slate-600">
-          Comparing {currentStats.quarter} vs {previousStats.quarter}
-        </p>
+    <section className="space-section">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-tight">
+          <h2 className="text-heading-1 text-foreground flex items-center gap-3">
+            <div className="p-3 interactive-accent rounded-xl shadow-sm">
+              <Target className="w-6 h-6" />
+            </div>
+            Performance Overview
+          </h2>
+          <p className="text-body text-foreground-secondary">
+            {formatDate(currentStats[0].startDate)} - {formatDate(currentStats[0].endDate)} • {currentStats[0].period}
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        {stats.map((stat) => {
-          const change = calculateChange(stat.value, stat.previousValue)
-          const Icon = stat.icon
-
+      {/* Individual Profile Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentStats.map((current, index) => {
+          const previous = previousStats[index]
+          const PlatformIcon = getPlatformIcon(current.profileName)
+          
           return (
-            <Card key={stat.title} className="relative overflow-hidden">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600 flex items-center justify-between">
-                  {stat.title}
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
+            <Card key={current.profileId} className="surface-primary border-2 shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <PlatformIcon className="h-5 w-5 text-muted-foreground" />
+                  {current.profileName}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold text-slate-900">
-                    {stat.isPercentage ? `${stat.value.toFixed(1)}%` : formatNumber(stat.value)}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {change.isNeutral ? (
-                      <Badge variant="secondary" className="text-xs">
-                        No change
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant={change.isPositive ? "default" : "destructive"}
-                        className="text-xs flex items-center gap-1"
-                      >
-                        {change.isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                        {change.percentage}%
-                      </Badge>
-                    )}
-                    <span className="text-xs text-slate-500">vs last quarter</span>
-                  </div>
-                </div>
+              <CardContent className="space-y-4">
+                {/* Profile-specific metrics */}
               </CardContent>
             </Card>
           )
         })}
       </div>
-    </div>
+
+      {/* Period Summary */}
+      <div className="surface-secondary rounded-2xl p-8 border-2 shadow-sm">
+        <h3 className="text-heading-2 text-foreground mb-6">Period Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center space-tight">
+            <div className="text-display text-foreground font-bold">{formatNumber(totalInteractions)}</div>
+            <div className="text-body-small text-foreground-secondary font-medium">Total Interactions</div>
+          </div>
+          <div className="text-center space-tight">
+            <div className="text-display text-foreground font-bold">{avgEngagement.toFixed(2)}%</div>
+            <div className="text-body-small text-foreground-secondary font-medium">Avg. Engagement</div>
+          </div>
+          <div className="text-center space-tight">
+            <div className="text-display text-foreground font-bold">{daysTracked}</div>
+            <div className="text-body-small text-foreground-secondary font-medium">Days Tracked</div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
