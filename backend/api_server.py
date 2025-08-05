@@ -69,7 +69,40 @@ def compare_quarters_endpoint(req: CompareRequest):
 @app.post("/generate_strategy")
 def generate_strategy_endpoint(req: StrategyRequest):
     try:
-        return generate_strategy(req.report_data)
+        strategy_json_string = generate_strategy(req.report_data)
+        # Parse the JSON string returned by generate_strategy and return the object
+        import json
+        return json.loads(strategy_json_string)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/stats")
+def stats_endpoint(req: StatsRequest):
+    """
+    New endpoint that matches frontend expectations.
+    This is a wrapper around the existing profile_stats function.
+    """
+    try:
+        # Call the existing profile_stats function
+        raw_data = get_profile_stats(req.profile_id, req.start_date, req.end_date)
+
+        # Transform the data to match frontend expectations
+        # The frontend expects a response that can be used directly
+        return raw_data
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/strategy")
+def strategy_endpoint(req: StrategyRequest):
+    """
+    New endpoint that matches frontend expectations.
+    This is a wrapper around the existing generate_strategy function.
+    """
+    try:
+        strategy_json_string = generate_strategy(req.report_data)
+        # Parse the JSON string returned by generate_strategy and return the object
+        import json
+        return json.loads(strategy_json_string)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
